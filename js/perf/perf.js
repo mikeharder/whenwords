@@ -5,7 +5,7 @@ import {
   parseDuration,
   humanDate,
   dateRange,
-} from '../src/index.js';
+} from '../src/whenwords.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
