@@ -8,7 +8,7 @@ on:
 
 jobs:
   Actionlint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: read
     
@@ -20,7 +20,10 @@ jobs:
     - name: Setup actionlint matcher
       run: echo "::add-matcher::.github/actionlint-matcher.json"
     
-    - name: Actionlint
-      uses: docker://rhysd/actionlint:latest
-      with:
-        args: -color -verbose
+    - name: Install actionlint
+      run: |
+        curl -sSL https://github.com/rhysd/actionlint/releases/download/v1.7.10/actionlint_1.7.10_linux_amd64.tar.gz | tar -xz
+        sudo mv actionlint /usr/local/bin/
+    
+    - name: Run actionlint
+      run: actionlint -color -verbose
