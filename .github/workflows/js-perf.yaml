@@ -34,6 +34,6 @@ jobs:
         npm run perf | tee perf-results.txt
         {
           echo '```text'
-          cat perf-results.txt
+          tail -n +4 perf-results.txt
           echo '```'
         } >> "$GITHUB_STEP_SUMMARY"
