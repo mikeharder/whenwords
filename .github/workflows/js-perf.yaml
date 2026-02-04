@@ -29,4 +29,11 @@ jobs:
       run: npm ci --no-audit --no-fund
     
     - name: npm run perf
-      run: npm run perf
+      run: |
+        set -o pipefail
+        npm run perf | tee perf-results.txt
+        {
+          echo '```text'
+          cat perf-results.txt
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
