@@ -21,7 +21,7 @@ const testsYaml = fs.readFileSync(
 );
 const tests = yaml.load(testsYaml);
 
-const bench = new Bench({ time: 500 });
+const bench = new Bench({ time: 50, warmupTime: 10 });
 
 // Select a subset of timeago tests for benchmarking
 const timeagoTests = [
