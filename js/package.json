@@ -7,8 +7,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check . --log-level debug",
     "lint": "cross-env DEBUG=eslint:eslint,eslint:linter eslint .",
-    "perf": "node perf.js",
-    "test": "node test.js"
+    "perf": "node perf/perf.js",
+    "test": "node test/test.js"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",

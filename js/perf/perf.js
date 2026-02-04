@@ -5,7 +5,7 @@ import {
   parseDuration,
   humanDate,
   dateRange,
-} from './index.js';
+} from '../src/index.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 
 // Load tests from YAML file
 const testsYaml = fs.readFileSync(
-  path.join(__dirname, '..', 'spec', 'tests.yaml'),
+  path.join(__dirname, '..', '..', 'spec', 'tests.yaml'),
   'utf8'
 );
 const tests = yaml.load(testsYaml);
