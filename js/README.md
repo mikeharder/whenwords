@@ -51,4 +51,4 @@ npm run format:check
 
 ## Specification Compliance
 
-This implementation follows the [whenwords specification](../SPEC.md) and passes all tests defined in [tests.yaml](../tests.yaml).
+This implementation follows the [whenwords specification](../spec/SPEC.md) and passes all tests defined in [tests.yaml](../spec/tests.yaml).
