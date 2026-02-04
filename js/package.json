@@ -8,9 +8,12 @@
     "format:check": "prettier --check . --log-level debug",
     "lint": "cross-env DEBUG=eslint:eslint,eslint:linter eslint .",
     "perf": "node perf/perf.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:ui": "vitest --coverage.enabled --ui"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.4",
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
     "globals": "^17.2.0",
