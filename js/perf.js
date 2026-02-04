@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 
 // Load tests from YAML file
 const testsYaml = fs.readFileSync(
-  path.join(__dirname, '..', 'tests.yaml'),
+  path.join(__dirname, '..', 'spec', 'tests.yaml'),
   'utf8'
 );
 const tests = yaml.load(testsYaml);
