@@ -1,0 +1,21 @@
+{
+  "name": "whenwords-js",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npm run test && npm run lint && npm run format:check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check . --log-level debug",
+    "lint": "cross-env DEBUG=eslint:eslint,eslint:linter eslint .",
+    "perf": "node perf.js",
+    "test": "node test.js"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "eslint": "9.39.2",
+    "globals": "^17.2.0",
+    "js-yaml": "^4.1.1",
+    "prettier": "3.8.1",
+    "tinybench": "^6.0.0"
+  }
+}

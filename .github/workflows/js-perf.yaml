@@ -1,0 +1,32 @@
+name: JS Perf
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  perf:
+    name: JS Perf
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: js
+    
+    steps:
+    - uses: actions/checkout@v6
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        cache: npm
+        cache-dependency-path: js/package-lock.json
+    
+    - name: npm ci
+      run: npm ci --no-audit --no-fund
+    
+    - name: npm run perf
+      run: npm run perf

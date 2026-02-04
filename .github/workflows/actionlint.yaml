@@ -1,0 +1,26 @@
+name: Actionlint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  Actionlint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+    
+    # https://github.com/rhysd/actionlint/blob/main/.github/actionlint-matcher.json
+    - name: Setup actionlint matcher
+      run: echo "::add-matcher::.github/actionlint-matcher.json"
+    
+    - name: Actionlint
+      uses: docker://rhysd/actionlint:latest
+      with:
+        args: -color -verbose
