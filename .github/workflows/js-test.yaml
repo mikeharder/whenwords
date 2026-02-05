@@ -35,7 +35,7 @@ jobs:
         {
           echo '## Coverage Report'
           echo '```text'
-          grep -A 10 "Coverage report" coverage-results.txt
+          grep -A 10 "Coverage report" coverage-results.txt || echo "Coverage report not found"
           echo '```'
         } >> "$GITHUB_STEP_SUMMARY"
     
