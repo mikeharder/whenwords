@@ -33,7 +33,7 @@ runs:
           echo ""
           echo "---"
           echo ""
-          echo "_Posted by [workflow run](${{ inputs.workflow-run-url }})_"
+          echo "_Posted by ${{ inputs.workflow-run-url }}_"
         } > pr-comment.txt
 
         # Find existing comment
