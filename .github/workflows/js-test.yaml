@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       contents: read
+      pull-requests: write
     defaults:
       run:
         working-directory: js
@@ -46,7 +47,16 @@ jobs:
             echo '```text'
             cat coverage/coverage.txt
             echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY" > test-summary.txt
+
+      - name: Post PR comment with test results
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          COMMENT_BODY=$(cat js/test-summary.txt)
+          gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
 
       - name: pnpm run lint
         run: pnpm run lint
