@@ -126,11 +126,13 @@ All implementations must:
 When optimizing performance-critical code:
 
 ### Benchmarking
+
 - **Run performance tests first** — Use `pnpm run perf` to identify actual bottlenecks before making changes
 - **Measure, don't guess** — Focus optimization efforts on functions that show up as slow in benchmarks
 - **Compare before/after** — Document performance improvements with concrete numbers (e.g., "20x faster: 12,204ns → 602ns")
 
 ### Common Performance Patterns
+
 - **Pre-compile regexes** — Move regex patterns outside functions as constants to avoid recompilation on each call
 - **Minimize regex passes** — Consolidate multiple regex patterns into a single comprehensive pattern when possible
 - **Avoid nested loops** — Look for O(n²) algorithms (e.g., overlap detection) that can be eliminated with better data structures
@@ -139,13 +141,16 @@ When optimizing performance-critical code:
 - **Prefer simple algorithms** — A single-pass linear algorithm is usually faster than multiple passes, even with simpler logic per pass
 
 ### Example: parseDuration Optimization
+
 The `parseDuration` function was optimized from ~12,000ns to ~600ns (20x improvement) by:
+
 1. Consolidating 12+ regex patterns into one comprehensive pattern
 2. Eliminating O(n²) overlap detection by using sequential matching
 3. Pre-compiling regex and lookup tables outside the function
 4. Removing redundant `toLowerCase()` calls
 
 ### Performance Testing
+
 - Performance tests are in `/js/perf/perf.js` using the tinybench library
 - Run `pnpm run perf` to benchmark all functions
 - CI runs performance tests automatically via `.github/workflows/js-perf.yaml`
