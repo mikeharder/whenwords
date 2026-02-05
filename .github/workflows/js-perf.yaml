@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pull-requests: write
     defaults:
       run:
         working-directory: js
@@ -41,4 +42,30 @@ jobs:
             echo '```text'
             tail -n +5 perf-results.txt
             echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee "$GITHUB_STEP_SUMMARY" > perf-summary.txt
+
+      - name: Post PR comment with perf results
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          {
+            echo "## ⚡ JS Perf Results"
+            echo ""
+            cat js/perf-summary.txt
+          } > pr-comment.txt
+
+          # Find existing comment
+          COMMENT_ID=$(gh api "repos/{owner}/{repo}/issues/${{ github.event.pull_request.number }}/comments" \
+            --jq '.[] | select(.body | startswith("## ⚡ JS Perf Results")) | .id' | head -1)
+
+          if [ -n "$COMMENT_ID" ]; then
+            # Update existing comment
+            gh api "repos/{owner}/{repo}/issues/comments/$COMMENT_ID" \
+              -X PATCH \
+              -F body=@pr-comment.txt
+          else
+            # Create new comment
+            gh pr comment ${{ github.event.pull_request.number }} --body-file pr-comment.txt
+          fi

@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       contents: read
+      pull-requests: write
     defaults:
       run:
         working-directory: js
@@ -46,7 +47,33 @@ jobs:
             echo '```text'
             cat coverage/coverage.txt
             echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee "$GITHUB_STEP_SUMMARY" > test-summary.txt
+
+      - name: Post PR comment with test results
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          {
+            echo "## 🧪 JS Test Results"
+            echo ""
+            cat js/test-summary.txt
+          } > pr-comment.txt
+
+          # Find existing comment
+          COMMENT_ID=$(gh api "repos/{owner}/{repo}/issues/${{ github.event.pull_request.number }}/comments" \
+            --jq '.[] | select(.body | startswith("## 🧪 JS Test Results")) | .id' | head -1)
+
+          if [ -n "$COMMENT_ID" ]; then
+            # Update existing comment
+            gh api "repos/{owner}/{repo}/issues/comments/$COMMENT_ID" \
+              -X PATCH \
+              -F body=@pr-comment.txt
+          else
+            # Create new comment
+            gh pr comment ${{ github.event.pull_request.number }} --body-file pr-comment.txt
+          fi
 
       - name: pnpm run lint
         run: pnpm run lint
