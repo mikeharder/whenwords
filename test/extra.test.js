@@ -116,4 +116,47 @@ describe('extra coverage tests', () => {
       expect(dateRange(start, end)).toBe('March 15–20, 2024');
     });
   });
+
+  describe('default reference parameter coverage', () => {
+    it('should use timestamp as reference when reference is omitted in timeago', () => {
+      // Line 40: Tests the else branch where reference === undefined
+      const result = timeago(1609459200);
+      expect(result).toBe('just now');
+    });
+
+    it('should use timestamp as reference when reference is omitted in humanDate', () => {
+      // Line 289: Tests the else branch where reference === undefined
+      const result = humanDate(1609459200);
+      expect(result).toBe('Today');
+    });
+  });
+
+  describe('duration rounding edge cases for singular', () => {
+    it('should handle rounding up in compact mode', () => {
+      // Line 154: Test rounding in compact mode
+      // 90 seconds with compact and max_units=1 should round to 2m
+      // This tests the compact branch of the rounding logic
+      expect(duration(90, { compact: true, max_units: 1 })).toBe('2m');
+    });
+  });
+
+  describe('duration edge case when last unit is seconds', () => {
+    it('should handle rounding when last displayed unit is seconds', () => {
+      // Line 135: Test the false branch where lastUnitIndex === units.length - 1
+      // This happens when the last displayed unit is 'seconds' (the smallest unit)
+      // With max_units=1 and a small value, we display seconds
+      expect(duration(45, { max_units: 1 })).toBe('45 seconds');
+    });
+  });
+
+  describe('humanDate past week edge case', () => {
+    it('should handle past week date where targetDay does not go negative', () => {
+      // Line 348: Test the false branch where targetDay >= 0
+      // Reference is Saturday (dayOfWeek=6), 2 days ago is Thursday (dayOfWeek=4)
+      // targetDay = 6 - 2 = 4 (>= 0, no wrap needed)
+      const refTimestamp = 1704499200; // Saturday, Jan 6, 2024 00:00:00 UTC (dayOfWeek=6)
+      const targetTimestamp = 1704326400; // Thursday, Jan 4, 2024 00:00:00 UTC (dayOfWeek=4)
+      expect(humanDate(targetTimestamp, refTimestamp)).toBe('Last Thursday');
+    });
+  });
 });

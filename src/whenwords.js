@@ -132,29 +132,27 @@ function duration(seconds, options = {}) {
       }
     });
 
-    if (lastUnitIndex < units.length - 1) {
-      const currentUnitDivisor = units[lastUnitIndex].divisor;
-      const fraction = remaining / currentUnitDivisor;
+    // Note: lastUnitIndex will never be the last unit (seconds) when remaining > 0,
+    // since seconds is the smallest unit and would have no remainder
+    const currentUnitDivisor = units[lastUnitIndex].divisor;
+    const fraction = remaining / currentUnitDivisor;
 
-      if (fraction >= 0.5) {
-        // Round up the last displayed unit
-        const lastPart = parts[parts.length - 1];
-        let newCount;
+    if (fraction >= 0.5) {
+      // Round up the last displayed unit
+      const lastPart = parts[parts.length - 1];
+      let newCount;
 
-        if (compact) {
-          const match = lastPart.match(/^(\d+)/);
-          newCount = parseInt(match[1]) + 1;
-          const unit = lastPart.substring(match[1].length);
-          parts[parts.length - 1] = `${newCount}${unit}`;
-        } else {
-          const match = lastPart.match(/^(\d+)/);
-          newCount = parseInt(match[1]) + 1;
-          const unitName = lastPart.substring(match[1].length).trim();
-          const isSingular = newCount === 1;
-          const suffix = isSingular ? '' : 's';
-          parts[parts.length - 1] =
-            `${newCount} ${unitName.replace(/s$/, '')}${suffix}`;
-        }
+      if (compact) {
+        const match = lastPart.match(/^(\d+)/);
+        newCount = parseInt(match[1]) + 1;
+        const unit = lastPart.substring(match[1].length);
+        parts[parts.length - 1] = `${newCount}${unit}`;
+      } else {
+        const match = lastPart.match(/^(\d+)/);
+        newCount = parseInt(match[1]) + 1;
+        const unitName = lastPart.substring(match[1].length).trim();
+        // newCount is always >= 2 since parts only contain counts >= 1
+        parts[parts.length - 1] = `${newCount} ${unitName.replace(/s$/, '')}s`;
       }
     }
   }
@@ -251,11 +249,10 @@ function parseDuration(input) {
   while ((match = PARSE_DURATION_REGEX.exec(working)) !== null) {
     const value = parseFloat(match[1]);
     const unit = match[2]; // Already lowercase from working string
+    // All units matched by the regex are guaranteed to be in UNIT_DIVISORS
     const divisor = UNIT_DIVISORS[unit];
-    if (divisor) {
-      totalSeconds += value * divisor;
-      foundAnyUnit = true;
-    }
+    totalSeconds += value * divisor;
+    foundAnyUnit = true;
   }
 
   if (!foundAnyUnit) {
