@@ -60,7 +60,20 @@ jobs:
             echo ""
             cat js/test-summary.txt
           } > pr-comment.txt
-          gh pr comment ${{ github.event.pull_request.number }} --body-file pr-comment.txt
+
+          # Find existing comment
+          COMMENT_ID=$(gh api "repos/{owner}/{repo}/issues/${{ github.event.pull_request.number }}/comments" \
+            --jq '.[] | select(.body | startswith("## 🧪 JS Test Results")) | .id' | head -1)
+
+          if [ -n "$COMMENT_ID" ]; then
+            # Update existing comment
+            gh api "repos/{owner}/{repo}/issues/comments/$COMMENT_ID" \
+              -X PATCH \
+              -F body=@pr-comment.txt
+          else
+            # Create new comment
+            gh pr comment ${{ github.event.pull_request.number }} --body-file pr-comment.txt
+          fi
 
       - name: pnpm run lint
         run: pnpm run lint
