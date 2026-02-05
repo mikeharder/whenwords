@@ -1,0 +1,44 @@
+name: Post PR Comment
+description: Create or update a PR comment with results
+
+inputs:
+  header:
+    description: 'Header text for the comment (e.g., "## 🧪 Test Results")'
+    required: true
+  body-file:
+    description: 'Path to file containing the body content to post'
+    required: true
+  pr-number:
+    description: 'Pull request number'
+    required: true
+  github-token:
+    description: 'GitHub token with pull-requests write permission'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Post PR comment
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: |
+        {
+          echo "${{ inputs.header }}"
+          echo ""
+          cat "${{ inputs.body-file }}"
+        } > pr-comment.txt
+
+        # Find existing comment
+        COMMENT_ID=$(gh api "repos/{owner}/{repo}/issues/${{ inputs.pr-number }}/comments" \
+          --jq '.[] | select(.body | startswith("${{ inputs.header }}")) | .id' | head -1)
+
+        if [ -n "$COMMENT_ID" ]; then
+          # Update existing comment
+          gh api "repos/{owner}/{repo}/issues/comments/$COMMENT_ID" \
+            -X PATCH \
+            -F body=@pr-comment.txt
+        else
+          # Create new comment
+          gh pr comment ${{ inputs.pr-number }} --body-file pr-comment.txt
+        fi
