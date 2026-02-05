@@ -15,24 +15,36 @@ jobs:
     defaults:
       run:
         working-directory: js
-    
+
     steps:
-    - uses: actions/checkout@v6
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v6
-      with:
-        cache: npm
-        cache-dependency-path: js/package-lock.json
-    
-    - name: npm ci
-      run: npm ci --no-audit --no-fund
-    
-    - name: npm test
-      run: npm test
-    
-    - name: npm run lint
-      run: npm run lint
-    
-    - name: npm run format:check
-      run: npm run format:check
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          cache: npm
+          cache-dependency-path: js/package-lock.json
+
+      - name: npm ci
+        run: npm ci --no-audit --no-fund
+
+      - name: npm run test:ci
+        run: |
+          set -o pipefail
+          npm run test:ci | tee vitest-output.txt
+          {
+            echo '## Vitest Summary'
+            echo '```text'
+            awk '/Test Files/{flag=1} flag{print} /Duration/{flag=0}' vitest-output.txt | sed 's/\x1b\[[0-9;]*m//g'
+            echo '```'
+            echo '## Coverage Report'
+            echo '```text'
+            cat coverage/coverage.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: npm run lint
+        run: npm run lint
+
+      - name: npm run format:check
+        run: npm run format:check
