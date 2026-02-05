@@ -80,7 +80,7 @@ describe('extra coverage tests', () => {
 
     it('should handle input that might create overlapping regex matches', () => {
       // Testing if different regex patterns might create overlaps
-      // Using verbose "min" which is in multi-letter units, 
+      // Using verbose "min" which is in multi-letter units,
       // but shouldn't overlap with single-letter "m" due to lookahead
       expect(parseDuration('5 min 30 s')).toBe(330);
     });
