@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   test:
-    name: JS - Test
+    name: JS Tests
     runs-on: ubuntu-slim
 
     defaults:
