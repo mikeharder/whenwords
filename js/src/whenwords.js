@@ -176,16 +176,37 @@ const SECONDS_PER_MINUTE = 60;
 // Pre-compiled regex for parseDuration - single pass to capture all units
 // Matches: number + unit name (e.g., "2 hours", "3h")
 // Uses (?![a-z]) negative lookahead for single-letter units to prevent matching as prefixes
-const PARSE_DURATION_REGEX = /([0-9.]+)\s*(years?|weeks?|wks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?|y(?![a-z])|w(?![a-z])|d(?![a-z])|h(?![a-z])|m(?![a-z])|s(?![a-z]))/gi;
+const PARSE_DURATION_REGEX =
+  /([0-9.]+)\s*(years?|weeks?|wks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?|y(?![a-z])|w(?![a-z])|d(?![a-z])|h(?![a-z])|m(?![a-z])|s(?![a-z]))/gi;
 
 // Unit name to divisor mapping for parseDuration
 const UNIT_DIVISORS = {
-  years: SECONDS_PER_YEAR, year: SECONDS_PER_YEAR, y: SECONDS_PER_YEAR,
-  weeks: SECONDS_PER_WEEK, week: SECONDS_PER_WEEK, wks: SECONDS_PER_WEEK, wk: SECONDS_PER_WEEK, w: SECONDS_PER_WEEK,
-  days: SECONDS_PER_DAY, day: SECONDS_PER_DAY, d: SECONDS_PER_DAY,
-  hours: SECONDS_PER_HOUR, hour: SECONDS_PER_HOUR, hrs: SECONDS_PER_HOUR, hr: SECONDS_PER_HOUR, h: SECONDS_PER_HOUR,
-  minutes: SECONDS_PER_MINUTE, minute: SECONDS_PER_MINUTE, mins: SECONDS_PER_MINUTE, min: SECONDS_PER_MINUTE, m: SECONDS_PER_MINUTE,
-  seconds: 1, second: 1, secs: 1, sec: 1, s: 1,
+  years: SECONDS_PER_YEAR,
+  year: SECONDS_PER_YEAR,
+  y: SECONDS_PER_YEAR,
+  weeks: SECONDS_PER_WEEK,
+  week: SECONDS_PER_WEEK,
+  wks: SECONDS_PER_WEEK,
+  wk: SECONDS_PER_WEEK,
+  w: SECONDS_PER_WEEK,
+  days: SECONDS_PER_DAY,
+  day: SECONDS_PER_DAY,
+  d: SECONDS_PER_DAY,
+  hours: SECONDS_PER_HOUR,
+  hour: SECONDS_PER_HOUR,
+  hrs: SECONDS_PER_HOUR,
+  hr: SECONDS_PER_HOUR,
+  h: SECONDS_PER_HOUR,
+  minutes: SECONDS_PER_MINUTE,
+  minute: SECONDS_PER_MINUTE,
+  mins: SECONDS_PER_MINUTE,
+  min: SECONDS_PER_MINUTE,
+  m: SECONDS_PER_MINUTE,
+  seconds: 1,
+  second: 1,
+  secs: 1,
+  sec: 1,
+  s: 1,
 };
 
 /**

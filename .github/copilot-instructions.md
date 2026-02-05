@@ -108,7 +108,8 @@ All implementations must:
 ## When Making Changes
 
 - Run `pnpm test` to ensure spec compliance
-- Run `pnpm run check` before committing to verify tests, linting, and formatting
+- **ALWAYS run `pnpm run check` before considering a change "done"** — This verifies tests, linting, and formatting all pass
+- **Formatting is required** — All code must pass `pnpm run format:check` before committing. Run `pnpm run format` to auto-fix formatting issues.
 - Keep functions pure and deterministic
 - Update `/js/usage.md` if API changes
 - Add tests to `/spec/tests.yaml` for new spec behaviors (cross-language)
