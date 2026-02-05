@@ -103,9 +103,9 @@ All implementations must:
 ## GitHub Actions
 
 The repository uses GitHub Actions for CI:
-- `/js-test.yaml` — JavaScript tests
-- `/js-perf.yaml` — Performance benchmarks
-- `/actionlint.yaml` — Workflow linting
+- `.github/workflows/js-test.yaml` — JavaScript tests
+- `.github/workflows/js-perf.yaml` — Performance benchmarks
+- `.github/workflows/actionlint.yaml` — Workflow linting
 
 ## Documentation
 
