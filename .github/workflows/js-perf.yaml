@@ -9,7 +9,7 @@ on:
 jobs:
   perf:
     name: JS Perf
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     defaults:
