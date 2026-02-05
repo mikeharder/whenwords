@@ -4,6 +4,9 @@ import globals from 'globals';
 export default [
   js.configs.recommended,
   {
+    ignores: ['coverage/**'],
+  },
+  {
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
