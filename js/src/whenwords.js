@@ -53,28 +53,28 @@ function timeago(timestamp, reference) {
   // Thresholds in seconds
   if (diff < 45) return 'just now';
   if (diff < 90) return formatOutput(1, 'minute');
-  if (diff < 45 * 60) {
-    const n = roundHalfUp(diff / 60);
+  if (diff < 45 * SECONDS_PER_MINUTE) {
+    const n = roundHalfUp(diff / SECONDS_PER_MINUTE);
     return formatOutput(n, 'minute');
   }
-  if (diff < 90 * 60) return formatOutput(1, 'hour');
-  if (diff < 22 * 3600) {
-    const n = roundHalfUp(diff / 3600);
+  if (diff < 90 * SECONDS_PER_MINUTE) return formatOutput(1, 'hour');
+  if (diff < 22 * SECONDS_PER_HOUR) {
+    const n = roundHalfUp(diff / SECONDS_PER_HOUR);
     return formatOutput(n, 'hour');
   }
-  if (diff < 36 * 3600) return formatOutput(1, 'day');
-  if (diff < 26 * 86400) {
-    const n = roundHalfUp(diff / 86400);
+  if (diff < 36 * SECONDS_PER_HOUR) return formatOutput(1, 'day');
+  if (diff < 26 * SECONDS_PER_DAY) {
+    const n = roundHalfUp(diff / SECONDS_PER_DAY);
     return formatOutput(n, 'day');
   }
-  if (diff < 46 * 86400) return formatOutput(1, 'month');
-  if (diff < 320 * 86400) {
-    const n = roundHalfUp(diff / (30 * 86400));
+  if (diff < 46 * SECONDS_PER_DAY) return formatOutput(1, 'month');
+  if (diff < 320 * SECONDS_PER_DAY) {
+    const n = roundHalfUp(diff / (30 * SECONDS_PER_DAY));
     return formatOutput(n, 'month');
   }
-  if (diff < 548 * 86400) return formatOutput(1, 'year');
+  if (diff < 548 * SECONDS_PER_DAY) return formatOutput(1, 'year');
 
-  const n = roundHalfUp(diff / (365 * 86400));
+  const n = roundHalfUp(diff / SECONDS_PER_YEAR);
   return formatOutput(n, 'year');
 }
 
@@ -96,11 +96,11 @@ function duration(seconds, options = {}) {
   const maxUnits = options.max_units !== undefined ? options.max_units : 2;
 
   const units = [
-    { name: 'year', divisor: 365 * 86400, shortName: 'y' },
-    { name: 'month', divisor: 30 * 86400, shortName: 'mo' },
-    { name: 'day', divisor: 86400, shortName: 'd' },
-    { name: 'hour', divisor: 3600, shortName: 'h' },
-    { name: 'minute', divisor: 60, shortName: 'm' },
+    { name: 'year', divisor: SECONDS_PER_YEAR, shortName: 'y' },
+    { name: 'month', divisor: 30 * SECONDS_PER_DAY, shortName: 'mo' },
+    { name: 'day', divisor: SECONDS_PER_DAY, shortName: 'd' },
+    { name: 'hour', divisor: SECONDS_PER_HOUR, shortName: 'h' },
+    { name: 'minute', divisor: SECONDS_PER_MINUTE, shortName: 'm' },
     { name: 'second', divisor: 1, shortName: 's' },
   ];
 
@@ -166,16 +166,25 @@ function duration(seconds, options = {}) {
   return compact ? parts.join(' ') : parts.join(', ');
 }
 
+// Constants for time unit conversions
+const SECONDS_PER_DAY = 86400;
+const SECONDS_PER_YEAR = 365 * SECONDS_PER_DAY;
+const SECONDS_PER_WEEK = 7 * SECONDS_PER_DAY;
+const SECONDS_PER_HOUR = 3600;
+const SECONDS_PER_MINUTE = 60;
+
 // Pre-compiled regex for parseDuration - single pass to capture all units
+// Matches: number + unit name (e.g., "2 hours", "3h")
+// Uses (?![a-z]) negative lookahead for single-letter units to prevent matching as prefixes
 const PARSE_DURATION_REGEX = /([0-9.]+)\s*(years?|weeks?|wks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?|y(?![a-z])|w(?![a-z])|d(?![a-z])|h(?![a-z])|m(?![a-z])|s(?![a-z]))/gi;
 
 // Unit name to divisor mapping for parseDuration
 const UNIT_DIVISORS = {
-  years: 365 * 86400, year: 365 * 86400, y: 365 * 86400,
-  weeks: 7 * 86400, week: 7 * 86400, wks: 7 * 86400, wk: 7 * 86400, w: 7 * 86400,
-  days: 86400, day: 86400, d: 86400,
-  hours: 3600, hour: 3600, hrs: 3600, hr: 3600, h: 3600,
-  minutes: 60, minute: 60, mins: 60, min: 60, m: 60,
+  years: SECONDS_PER_YEAR, year: SECONDS_PER_YEAR, y: SECONDS_PER_YEAR,
+  weeks: SECONDS_PER_WEEK, week: SECONDS_PER_WEEK, wks: SECONDS_PER_WEEK, wk: SECONDS_PER_WEEK, w: SECONDS_PER_WEEK,
+  days: SECONDS_PER_DAY, day: SECONDS_PER_DAY, d: SECONDS_PER_DAY,
+  hours: SECONDS_PER_HOUR, hour: SECONDS_PER_HOUR, hrs: SECONDS_PER_HOUR, hr: SECONDS_PER_HOUR, h: SECONDS_PER_HOUR,
+  minutes: SECONDS_PER_MINUTE, minute: SECONDS_PER_MINUTE, mins: SECONDS_PER_MINUTE, min: SECONDS_PER_MINUTE, m: SECONDS_PER_MINUTE,
   seconds: 1, second: 1, secs: 1, sec: 1, s: 1,
 };
 
@@ -223,7 +232,7 @@ function parseDuration(input) {
     if (value < 0) {
       throw new Error('Negative durations not allowed');
     }
-    const unit = match[2].toLowerCase();
+    const unit = match[2]; // Already lowercase from working string
     const divisor = UNIT_DIVISORS[unit];
     if (divisor) {
       totalSeconds += value * divisor;
@@ -264,7 +273,7 @@ function humanDate(timestamp, reference) {
   const [tYear, tMonth, tDay, _tDayOfWeek] = getDateParts(ts);
   const [rYear, rMonth, rDay, rDayOfWeek] = getDateParts(ref);
 
-  const daysDiff = Math.floor((ref - ts) / 86400);
+  const daysDiff = Math.floor((ref - ts) / SECONDS_PER_DAY);
   const dayName = [
     'Sunday',
     'Monday',
