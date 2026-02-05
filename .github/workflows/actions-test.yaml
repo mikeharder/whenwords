@@ -1,4 +1,4 @@
-name: .github Tests
+name: Actions - Test
 
 on:
   push:
