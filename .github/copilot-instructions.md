@@ -114,6 +114,8 @@ All implementations must:
 - Add tests to `/spec/tests.yaml` for new spec behaviors (cross-language)
 - Do not add internationalization unless specified
 - Maintain backward compatibility within v0.1.x
+- **Maintain 100% code coverage** — When adding new code, always add corresponding test cases. Use `pnpm run test:ci` to verify coverage remains at 100%. If coverage drops, add tests to cover the new code paths.
+- **Avoid unreachable defensive code** — Before adding defensive checks (e.g., negative value validation, overlap detection), verify they can actually be triggered. If the code design (e.g., regex patterns, type checks) makes certain conditions impossible, don't add checks for them. This keeps the codebase clean and maintainable.
 - **Only update `pnpm-lock.yaml` when adding, removing, or updating dependencies** — Do not commit incidental changes to pnpm-lock.yaml that occur from running `pnpm install` or `pnpm ci`. If you need to run these commands for testing, revert any unintended pnpm-lock.yaml changes before committing.
 - **After all other tasks, reflect on your work, and update `copilot-instructions.md` if anything relevant has changed** — This ensures the instructions stay current with project practices and decisions.
 - **When given direct feedback in a PR, update `copilot-instructions.md`** — This makes it less likely you will need similar feedback in other PRs by incorporating lessons learned.

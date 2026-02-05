@@ -262,28 +262,11 @@ function parseDuration(input) {
     }
   }
 
-  // Sort by index and remove overlaps
+  // Sort by index and process matches
   allMatches.sort((a, b) => a.index - b.index);
-  const used = new Set();
   for (const match of allMatches) {
-    // Check if this match overlaps with any already-used match
-    let overlaps = false;
-    for (const usedMatch of used) {
-      if (!(match.end <= usedMatch.index || match.index >= usedMatch.end)) {
-        overlaps = true;
-        break;
-      }
-    }
-
-    if (!overlaps) {
-      used.add(match);
-      foundAnyUnit = true;
-      const value = match.value;
-      if (value < 0) {
-        throw new Error('Negative durations not allowed');
-      }
-      totalSeconds += value * match.divisor;
-    }
+    foundAnyUnit = true;
+    totalSeconds += match.value * match.divisor;
   }
 
   if (!foundAnyUnit) {
