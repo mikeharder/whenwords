@@ -75,16 +75,6 @@ jobs:
       - name: pnpm run format:check
         run: pnpm run format:check
 
-  actionlint:
-    name: Actionlint
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
       # https://github.com/rhysd/actionlint/blob/main/.github/actionlint-matcher.json
       - name: Setup actionlint matcher
         run: echo "::add-matcher::.github/matchers/actionlint-matcher.json"
@@ -93,18 +83,3 @@ jobs:
         uses: docker://rhysd/actionlint:latest
         with:
           args: -color -verbose
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
-
-      - name: format:check
-        run: npx prettier --check .github --log-level warn
