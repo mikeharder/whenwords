@@ -4,15 +4,8 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'v8',
-      reporter: [['text', { file: 'coverage.txt' }], 'json', 'html', 'lcov'],
+      reporter: ['text', ['text', { file: 'coverage.txt' }]],
       include: ['src/**/*.js'],
-      exclude: [
-        'node_modules/**',
-        'test/**',
-        'perf/**',
-        '**/*.test.js',
-        '**/*.spec.js',
-      ],
       all: true,
       lines: 80,
       functions: 80,
