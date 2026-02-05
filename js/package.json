@@ -11,7 +11,7 @@
     "perf": "node perf/perf.js",
     "test": "vitest run",
     "test:ci": "vitest run --coverage",
-    "web": "serve web -l 8000"
+    "web": "serve . -l 8000"
   },
   "devDependencies": {
     "@eslint/js": "9.39.2",
