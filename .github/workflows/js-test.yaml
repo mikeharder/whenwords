@@ -13,7 +13,6 @@ jobs:
   test:
     name: JS Tests
     runs-on: ubuntu-slim
-
     defaults:
       run:
         working-directory: js
