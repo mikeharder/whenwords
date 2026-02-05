@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,8 +6,9 @@
     <title>whenwords Playground</title>
     <style>
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-          Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
@@ -140,7 +141,7 @@
         'Just now',
         `timeago(${now}, ${now})`,
         { value: timeago(now, now) },
-        'Timestamps less than 45 seconds apart',
+        'Timestamps less than 45 seconds apart'
       );
 
       const oneHourAgo = now - 3600;
@@ -149,7 +150,7 @@
         'Past time',
         `timeago(${oneHourAgo}, ${now})`,
         { value: timeago(oneHourAgo, now) },
-        'One hour ago',
+        'One hour ago'
       );
 
       const inThreeHours = now + 3 * 3600;
@@ -158,7 +159,7 @@
         'Future time',
         `timeago(${inThreeHours}, ${now})`,
         { value: timeago(inThreeHours, now) },
-        'Three hours from now',
+        'Three hours from now'
       );
 
       const twoDaysAgo = now - 2 * 86400;
@@ -167,7 +168,7 @@
         'Days ago',
         `timeago(${twoDaysAgo}, ${now})`,
         { value: timeago(twoDaysAgo, now) },
-        'Two days ago',
+        'Two days ago'
       );
 
       const twoMonthsAgo = now - 60 * 86400;
@@ -176,7 +177,7 @@
         'Months ago',
         `timeago(${twoMonthsAgo}, ${now})`,
         { value: timeago(twoMonthsAgo, now) },
-        'About two months ago',
+        'About two months ago'
       );
 
       // duration examples
@@ -187,7 +188,7 @@
         'Simple duration',
         `duration(3661)`,
         { value: duration(3661) },
-        'One hour and one minute',
+        'One hour and one minute'
       );
 
       renderExample(
@@ -195,7 +196,7 @@
         'Compact format',
         `duration(3661, { compact: true })`,
         { value: duration(3661, { compact: true }) },
-        'Compact style with abbreviated units',
+        'Compact style with abbreviated units'
       );
 
       renderExample(
@@ -203,7 +204,7 @@
         'Max units',
         `duration(9000, { max_units: 1 })`,
         { value: duration(9000, { max_units: 1 }) },
-        'Show only the largest unit',
+        'Show only the largest unit'
       );
 
       renderExample(
@@ -211,7 +212,7 @@
         'Multiple units',
         `duration(90061)`,
         { value: duration(90061) },
-        'Default: show up to 2 units',
+        'Default: show up to 2 units'
       );
 
       renderExample(
@@ -219,7 +220,7 @@
         'Zero seconds',
         `duration(0)`,
         { value: duration(0) },
-        'Special case: zero duration',
+        'Special case: zero duration'
       );
 
       renderExample(
@@ -227,7 +228,7 @@
         'Compact with max units',
         `duration(93784, { compact: true, max_units: 3 })`,
         { value: duration(93784, { compact: true, max_units: 3 }) },
-        'Compact format with 3 units',
+        'Compact format with 3 units'
       );
 
       try {
@@ -238,13 +239,13 @@
           'Error: negative duration',
           `duration(-100)`,
           { value: e.message, error: true },
-          'Negative durations are not allowed',
+          'Negative durations are not allowed'
         );
       }
 
       // parseDuration examples
       const parseDurationContainer = document.getElementById(
-        'parse-duration-examples',
+        'parse-duration-examples'
       );
 
       renderExample(
@@ -252,7 +253,7 @@
         'Compact format',
         `parseDuration('2h30m')`,
         { value: parseDuration('2h30m') },
-        'Parse compact duration string',
+        'Parse compact duration string'
       );
 
       renderExample(
@@ -260,7 +261,7 @@
         'Verbose format',
         `parseDuration('2 hours 30 minutes')`,
         { value: parseDuration('2 hours 30 minutes') },
-        'Parse verbose duration string',
+        'Parse verbose duration string'
       );
 
       renderExample(
@@ -268,7 +269,7 @@
         'Colon notation (h:mm)',
         `parseDuration('2:30')`,
         { value: parseDuration('2:30') },
-        'Parse colon-separated time',
+        'Parse colon-separated time'
       );
 
       renderExample(
@@ -276,7 +277,7 @@
         'Colon notation (h:mm:ss)',
         `parseDuration('1:30:00')`,
         { value: parseDuration('1:30:00') },
-        'Parse full time format',
+        'Parse full time format'
       );
 
       renderExample(
@@ -284,7 +285,7 @@
         'Mixed format',
         `parseDuration('1 day, 2 hours, and 30 minutes')`,
         { value: parseDuration('1 day, 2 hours, and 30 minutes') },
-        'Parse natural language with commas and "and"',
+        'Parse natural language with commas and "and"'
       );
 
       renderExample(
@@ -292,7 +293,7 @@
         'Decimal values',
         `parseDuration('2.5 hours')`,
         { value: parseDuration('2.5 hours') },
-        'Parse decimal values',
+        'Parse decimal values'
       );
 
       try {
@@ -303,7 +304,7 @@
           'Error: empty string',
           `parseDuration('')`,
           { value: e.message, error: true },
-          'Cannot parse empty string',
+          'Cannot parse empty string'
         );
       }
 
@@ -315,7 +316,7 @@
           'Error: no units',
           `parseDuration('invalid text')`,
           { value: e.message, error: true },
-          'String must contain parseable units',
+          'String must contain parseable units'
         );
       }
 
@@ -327,7 +328,7 @@
         'Today',
         `humanDate(${now}, ${now})`,
         { value: humanDate(now, now) },
-        'Same day',
+        'Same day'
       );
 
       const yesterday = now - 86400;
@@ -336,7 +337,7 @@
         'Yesterday',
         `humanDate(${yesterday}, ${now})`,
         { value: humanDate(yesterday, now) },
-        'One day ago',
+        'One day ago'
       );
 
       const tomorrow = now + 86400;
@@ -345,7 +346,7 @@
         'Tomorrow',
         `humanDate(${tomorrow}, ${now})`,
         { value: humanDate(tomorrow, now) },
-        'One day ahead',
+        'One day ahead'
       );
 
       const threeDaysAgo = now - 3 * 86400;
@@ -354,7 +355,7 @@
         'Last weekday',
         `humanDate(${threeDaysAgo}, ${now})`,
         { value: humanDate(threeDaysAgo, now) },
-        '2-6 days ago shows "Last [Weekday]"',
+        '2-6 days ago shows "Last [Weekday]"'
       );
 
       const fourDaysAhead = now + 4 * 86400;
@@ -363,7 +364,7 @@
         'This weekday',
         `humanDate(${fourDaysAhead}, ${now})`,
         { value: humanDate(fourDaysAhead, now) },
-        '2-6 days ahead shows "This [Weekday]"',
+        '2-6 days ahead shows "This [Weekday]"'
       );
 
       const twoWeeksAgo = now - 14 * 86400;
@@ -372,7 +373,7 @@
         'Same year',
         `humanDate(${twoWeeksAgo}, ${now})`,
         { value: humanDate(twoWeeksAgo, now) },
-        'Shows "Month Day" for same year',
+        'Shows "Month Day" for same year'
       );
 
       const lastYear = now - 400 * 86400;
@@ -381,7 +382,7 @@
         'Different year',
         `humanDate(${lastYear}, ${now})`,
         { value: humanDate(lastYear, now) },
-        'Shows "Month Day, Year" for different year',
+        'Shows "Month Day, Year" for different year'
       );
 
       // dateRange examples
@@ -392,7 +393,7 @@
         'Same day',
         `dateRange(${now}, ${now})`,
         { value: dateRange(now, now) },
-        'Start and end on same day',
+        'Start and end on same day'
       );
 
       const nextDay = now + 86400;
@@ -401,7 +402,7 @@
         'Same month',
         `dateRange(${now}, ${nextDay})`,
         { value: dateRange(now, nextDay) },
-        'Range within same month: "Month Day–Day, Year"',
+        'Range within same month: "Month Day–Day, Year"'
       );
 
       const nextMonth = now + 30 * 86400;
@@ -410,7 +411,7 @@
         'Same year',
         `dateRange(${now}, ${nextMonth})`,
         { value: dateRange(now, nextMonth) },
-        'Range within same year: "Month Day – Month Day, Year"',
+        'Range within same year: "Month Day – Month Day, Year"'
       );
 
       const nextYear = now + 400 * 86400;
@@ -419,7 +420,7 @@
         'Different years',
         `dateRange(${now}, ${nextYear})`,
         { value: dateRange(now, nextYear) },
-        'Range across years: "Month Day, Year – Month Day, Year"',
+        'Range across years: "Month Day, Year – Month Day, Year"'
       );
 
       const laterToday = now + 3600;
@@ -428,7 +429,7 @@
         'Auto-swap order',
         `dateRange(${laterToday}, ${now})`,
         { value: dateRange(laterToday, now) },
-        'Automatically swaps start/end if needed',
+        'Automatically swaps start/end if needed'
       );
     </script>
   </body>
