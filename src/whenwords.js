@@ -250,9 +250,6 @@ function parseDuration(input) {
   let match;
   while ((match = PARSE_DURATION_REGEX.exec(working)) !== null) {
     const value = parseFloat(match[1]);
-    if (value < 0) {
-      throw new Error('Negative durations not allowed');
-    }
     const unit = match[2]; // Already lowercase from working string
     const divisor = UNIT_DIVISORS[unit];
     if (divisor) {
