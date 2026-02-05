@@ -34,6 +34,9 @@ npm install
 # Run tests
 npm test
 
+# Run tests with coverage (used in CI)
+npm run test:ci
+
 # Run linting
 npm run lint
 
@@ -61,6 +64,9 @@ npm run check
 - **Test data**: Tests are driven by `/spec/tests.yaml` to ensure specification compliance
 - **Test structure**: Use `describe` and `it` blocks, load YAML test definitions
 - **All implementations must pass the spec tests**
+- **Coverage**: Code coverage is tracked using Vitest's V8 provider with 80% thresholds for statements, branches, functions, and lines
+- **CI Testing**: Use `npm run test:ci` in CI to generate coverage reports; use `npm test` for faster local development
+- **Coverage configuration**: Located in `js/vitest.config.js`, configured to write text reports directly to `coverage/coverage.txt` using Vitest's built-in `file` option
 
 ### Common Patterns
 
@@ -104,9 +110,16 @@ All implementations must:
 ## GitHub Actions
 
 The repository uses GitHub Actions for CI:
-- `.github/workflows/js-test.yaml` — JavaScript tests
+- `.github/workflows/js-test.yaml` — JavaScript tests with coverage reporting
 - `.github/workflows/js-perf.yaml` — Performance benchmarks
 - `.github/workflows/actionlint.yaml` — Workflow linting
+
+### CI Workflow Best Practices
+
+- **Avoid third-party actions** — Use built-in GitHub Actions features and native tool capabilities when possible
+- **Step summaries** — Display test results and coverage reports in GitHub Actions step summaries using `$GITHUB_STEP_SUMMARY`
+- **Coverage reporting** — Use Vitest's built-in text reporter with `file` option to write coverage directly to a file (e.g., `coverage/coverage.txt`), then read it in the workflow
+- **No custom scripts** — Prefer configuring tools (like Vitest) to generate output in the desired format rather than writing custom parsing scripts
 
 ## Documentation
 
