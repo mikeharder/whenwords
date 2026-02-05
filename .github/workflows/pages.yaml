@@ -27,6 +27,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Prepare deployment files
+        run: |
+          # Copy playground files to docs directory
+          cp js/web/index.html docs/playground.html
+          cp js/src/whenwords.js docs/whenwords.js
+          
+          # Update the import path in playground.html to use the copied whenwords.js
+          sed -i "s|from '../src/whenwords.js'|from './whenwords.js'|g" docs/playground.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
