@@ -105,6 +105,8 @@ All implementations must:
 - Do not add internationalization unless specified
 - Maintain backward compatibility within v0.1.x
 - **Only update `package-lock.json` when adding, removing, or updating dependencies** — Do not commit incidental changes to package-lock.json that occur from running `npm install` or `npm ci`. If you need to run these commands for testing, revert any unintended package-lock.json changes before committing.
+- **After all other tasks, reflect on your work, and update `copilot-instructions.md` if anything relevant has changed** — This ensures the instructions stay current with project practices and decisions.
+- **When given direct feedback in a PR, update `copilot-instructions.md`** — This makes it less likely you will need similar feedback in other PRs by incorporating lessons learned.
 
 ## GitHub Actions
 
