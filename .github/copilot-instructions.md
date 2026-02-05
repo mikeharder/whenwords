@@ -115,6 +115,7 @@ All implementations must:
 
 ## When Making Changes
 
+- **NEVER modify files in the `/spec/` folder** — The spec folder contains the formal specification and is maintained separately. It is excluded from prettier formatting (see `.prettierignore`). Only read from spec files, never write to them.
 - Run `pnpm test` to ensure spec compliance
 - **ALWAYS run `pnpm run check` before considering a change "done"** — This verifies tests, linting, and formatting all pass
 - **Formatting is required** — All code must pass `pnpm run format:check` before committing. Run `pnpm run format` to auto-fix formatting issues.
