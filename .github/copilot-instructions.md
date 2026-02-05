@@ -99,6 +99,7 @@ All implementations must:
 - Add tests to `/spec/tests.yaml` for new spec behaviors (cross-language)
 - Do not add internationalization unless specified
 - Maintain backward compatibility within v0.1.x
+- **Only update `package-lock.json` when adding, removing, or updating dependencies** — Do not commit incidental changes to package-lock.json that occur from running `npm install` or `npm ci`. If you need to run these commands for testing, revert any unintended package-lock.json changes before committing.
 
 ## GitHub Actions
 
