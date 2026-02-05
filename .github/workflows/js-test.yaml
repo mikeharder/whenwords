@@ -34,7 +34,7 @@ jobs:
         {
           echo '## Coverage Report'
           echo '```text'
-          node scripts/format-coverage.js
+          cat coverage/coverage.txt
           echo '```'
         } >> "$GITHUB_STEP_SUMMARY"
     
