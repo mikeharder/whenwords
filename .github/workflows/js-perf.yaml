@@ -15,30 +15,30 @@ jobs:
     defaults:
       run:
         working-directory: js
-    
+
     steps:
-    - uses: actions/checkout@v6
-    
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 10
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v6
-      with:
-        cache: pnpm
-        cache-dependency-path: js/pnpm-lock.yaml
-    
-    - name: pnpm install
-      run: pnpm install --frozen-lockfile
-    
-    - name: pnpm run perf
-      run: |
-        set -o pipefail
-        pnpm run perf | tee perf-results.txt
-        {
-          echo '```text'
-          tail -n +5 perf-results.txt
-          echo '```'
-        } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          cache: pnpm
+          cache-dependency-path: js/pnpm-lock.yaml
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: pnpm run perf
+        run: |
+          set -o pipefail
+          pnpm run perf | tee perf-results.txt
+          {
+            echo '```text'
+            tail -n +5 perf-results.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
