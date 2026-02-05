@@ -29,16 +29,15 @@ jobs:
       run: npm ci
     
     - name: npm run test:ci
-      run: npm run test:ci
-    
-    - name: Upload coverage reports
-      uses: codecov/codecov-action@v5
-      with:
-        files: ./js/coverage/lcov.info
-        flags: js
-        name: js-coverage
-        fail_ci_if_error: false
-        token: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        set -o pipefail
+        npm run test:ci | tee coverage-results.txt
+        {
+          echo '## Coverage Report'
+          echo '```text'
+          grep -A 10 "Coverage report" coverage-results.txt
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
     
     - name: npm run lint
       run: npm run lint
