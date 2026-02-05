@@ -175,6 +175,7 @@ The repository uses GitHub Actions for CI:
 ### CI Workflow Best Practices
 
 - **Avoid third-party actions** — Use built-in GitHub Actions features and native tool capabilities when possible
+- **Workflow-level permissions** — Define permissions at the workflow level (top-level `permissions:` block) rather than at the job level. This follows GitHub's recommended practice for better security visibility and easier maintenance. All workflows should use this pattern consistently.
 - **Step summaries** — Display test results and coverage reports in GitHub Actions step summaries using `$GITHUB_STEP_SUMMARY`
 - **PR comments** — For PR events, post step summary content as PR comments using GitHub CLI for easier review. Use a distinct header (e.g., "🧪 Test Results") to identify the comment, then search for and update existing comments instead of creating new ones each time. This keeps PR conversations clean.
 - **Coverage reporting** — Use Vitest's built-in text reporter with `file` option to write coverage directly to a file (e.g., `coverage/coverage.txt`), then read it in the workflow
