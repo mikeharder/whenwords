@@ -113,7 +113,7 @@ All implementations must:
 The repository uses GitHub Actions for CI:
 - `.github/workflows/js-test.yaml` — JavaScript tests with coverage reporting
 - `.github/workflows/js-perf.yaml` — Performance benchmarks
-- `.github/workflows/actionlint.yaml` — Workflow linting
+- `.github/workflows/actions-test.yaml` — Workflow linting with actionlint
 
 ### CI Workflow Best Practices
 
@@ -121,6 +121,12 @@ The repository uses GitHub Actions for CI:
 - **Step summaries** — Display test results and coverage reports in GitHub Actions step summaries using `$GITHUB_STEP_SUMMARY`
 - **Coverage reporting** — Use Vitest's built-in text reporter with `file` option to write coverage directly to a file (e.g., `coverage/coverage.txt`), then read it in the workflow
 - **No custom scripts** — Prefer configuring tools (like Vitest) to generate output in the desired format rather than writing custom parsing scripts
+
+### Workflow Naming Conventions
+
+- **Workflow names**: Use clear, descriptive names that indicate the workflow's purpose (e.g., "Actions Tests" for testing GitHub Actions workflows)
+- **File names**: Use kebab-case filenames that match the workflow's purpose (e.g., `actions-test.yaml` for Actions workflow testing)
+- **Job names**: Use lowercase job IDs with hyphens (e.g., `test` or `actions-test`) and provide descriptive display names (e.g., `name: Actions Tests`) for consistency with GitHub Actions conventions
 
 ## Documentation
 
