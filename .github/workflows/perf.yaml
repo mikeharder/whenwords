@@ -41,25 +41,9 @@ jobs:
 
       - name: Post PR comment with perf results
         if: github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          {
-            echo "## ⚡ Perf Results"
-            echo ""
-            cat perf-summary.txt
-          } > pr-comment.txt
-
-          # Find existing comment
-          COMMENT_ID=$(gh api "repos/{owner}/{repo}/issues/${{ github.event.pull_request.number }}/comments" \
-            --jq '.[] | select(.body | startswith("## ⚡ Perf Results")) | .id' | head -1)
-
-          if [ -n "$COMMENT_ID" ]; then
-            # Update existing comment
-            gh api "repos/{owner}/{repo}/issues/comments/$COMMENT_ID" \
-              -X PATCH \
-              -F body=@pr-comment.txt
-          else
-            # Create new comment
-            gh pr comment ${{ github.event.pull_request.number }} --body-file pr-comment.txt
-          fi
+        uses: ./.github/actions/post-pr-comment
+        with:
+          header: '## ⚡ Perf Results'
+          body-file: perf-summary.txt
+          pr-number: ${{ github.event.pull_request.number }}
+          github-token: ${{ github.token }}

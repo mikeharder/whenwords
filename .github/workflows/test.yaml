@@ -44,31 +44,6 @@ jobs:
             echo '```'
           } | tee "$GITHUB_STEP_SUMMARY" > test-summary.txt
 
-      - name: Post PR comment with test results
-        if: github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          {
-            echo "## 🧪 Test Results"
-            echo ""
-            cat test-summary.txt
-          } > pr-comment.txt
-
-          # Find existing comment
-          COMMENT_ID=$(gh api "repos/{owner}/{repo}/issues/${{ github.event.pull_request.number }}/comments" \
-            --jq '.[] | select(.body | startswith("## 🧪 Test Results")) | .id' | head -1)
-
-          if [ -n "$COMMENT_ID" ]; then
-            # Update existing comment
-            gh api "repos/{owner}/{repo}/issues/comments/$COMMENT_ID" \
-              -X PATCH \
-              -F body=@pr-comment.txt
-          else
-            # Create new comment
-            gh pr comment ${{ github.event.pull_request.number }} --body-file pr-comment.txt
-          fi
-
       - name: pnpm run lint
         run: pnpm run lint
 
@@ -83,3 +58,12 @@ jobs:
         uses: docker://rhysd/actionlint:latest
         with:
           args: -color -verbose
+
+      - name: Post PR comment with test results
+        if: github.event_name == 'pull_request'
+        uses: ./.github/actions/post-pr-comment
+        with:
+          header: '## 🧪 Test Results'
+          body-file: test-summary.txt
+          pr-number: ${{ github.event.pull_request.number }}
+          github-token: ${{ github.token }}
