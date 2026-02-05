@@ -166,6 +166,19 @@ function duration(seconds, options = {}) {
   return compact ? parts.join(' ') : parts.join(', ');
 }
 
+// Pre-compiled regex for parseDuration - single pass to capture all units
+const PARSE_DURATION_REGEX = /([0-9.]+)\s*(years?|weeks?|wks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?|y(?![a-z])|w(?![a-z])|d(?![a-z])|h(?![a-z])|m(?![a-z])|s(?![a-z]))/gi;
+
+// Unit name to divisor mapping for parseDuration
+const UNIT_DIVISORS = {
+  years: 365 * 86400, year: 365 * 86400, y: 365 * 86400,
+  weeks: 7 * 86400, week: 7 * 86400, wks: 7 * 86400, wk: 7 * 86400, w: 7 * 86400,
+  days: 86400, day: 86400, d: 86400,
+  hours: 3600, hour: 3600, hrs: 3600, hr: 3600, h: 3600,
+  minutes: 60, minute: 60, mins: 60, min: 60, m: 60,
+  seconds: 1, second: 1, secs: 1, sec: 1, s: 1,
+};
+
 /**
  * Parses a human-written duration string into seconds
  * @param {string} input - Duration string
@@ -178,15 +191,10 @@ function parseDuration(input) {
   }
 
   const str = input.trim().toLowerCase();
-  let totalSeconds = 0;
-  let foundAnyUnit = false;
 
-  // Check for negative sign
-  if (str.includes('-')) {
-    // Check if there's actually a negative number
-    if (/-\s*\d/.test(str)) {
-      throw new Error('Negative durations not allowed');
-    }
+  // Check for negative numbers
+  if (/-\s*\d/.test(str)) {
+    throw new Error('Negative durations not allowed');
   }
 
   // Check for colon notation first (h:mm:ss or h:mm)
@@ -199,90 +207,27 @@ function parseDuration(input) {
   }
 
   // Normalize the string for parsing
-  let working = str
+  const working = str
     .replace(/,\s*and\s*/g, ' ')
     .replace(/\s+and\s+/g, ' ')
     .replace(/,/g, ' ');
 
-  // Unit specifications - order matters for matching
-  const units = [
-    { names: ['years', 'year'], divisor: 365 * 86400 },
-    { names: ['weeks', 'week', 'wks', 'wk'], divisor: 7 * 86400 },
-    { names: ['days', 'day'], divisor: 86400 },
-    { names: ['hours', 'hour', 'hrs', 'hr'], divisor: 3600 },
-    { names: ['minutes', 'minute', 'mins', 'min'], divisor: 60 },
-    { names: ['seconds', 'second', 'secs', 'sec'], divisor: 1 },
-  ];
+  let totalSeconds = 0;
+  let foundAnyUnit = false;
 
-  // Single-letter units
-  const singleUnits = [
-    { names: ['y'], divisor: 365 * 86400 },
-    { names: ['w'], divisor: 7 * 86400 },
-    { names: ['d'], divisor: 86400 },
-    { names: ['h'], divisor: 3600 },
-    { names: ['m'], divisor: 60 },
-    { names: ['s'], divisor: 1 },
-  ];
-
-  // Extract all number-unit pairs
-  const allMatches = [];
-
-  // Extract multi-letter and multi-word units first
-  for (const unit of units) {
-    const pattern = unit.names
-      .map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-      .join('|');
-    const regex = new RegExp(`([0-9.]+)\\s*(${pattern})`, 'gi');
-    let match;
-    while ((match = regex.exec(working)) !== null) {
-      allMatches.push({
-        index: match.index,
-        end: regex.lastIndex,
-        value: parseFloat(match[1]),
-        divisor: unit.divisor,
-        matched: match[0],
-      });
+  // Use single regex to capture all units in one pass
+  PARSE_DURATION_REGEX.lastIndex = 0; // Reset regex state
+  let match;
+  while ((match = PARSE_DURATION_REGEX.exec(working)) !== null) {
+    const value = parseFloat(match[1]);
+    if (value < 0) {
+      throw new Error('Negative durations not allowed');
     }
-  }
-
-  // Extract single-letter units (more flexible matching for compact format)
-  for (const unit of singleUnits) {
-    const pattern = unit.names.join('|');
-    // Match single letters not preceded or followed by word characters
-    const regex = new RegExp(`([0-9.]+)\\s*(${pattern})(?![a-z])`, 'gi');
-    let match;
-    while ((match = regex.exec(working)) !== null) {
-      allMatches.push({
-        index: match.index,
-        end: regex.lastIndex,
-        value: parseFloat(match[1]),
-        divisor: unit.divisor,
-        matched: match[0],
-      });
-    }
-  }
-
-  // Sort by index and remove overlaps
-  allMatches.sort((a, b) => a.index - b.index);
-  const used = new Set();
-  for (const match of allMatches) {
-    // Check if this match overlaps with any already-used match
-    let overlaps = false;
-    for (const usedMatch of used) {
-      if (!(match.end <= usedMatch.index || match.index >= usedMatch.end)) {
-        overlaps = true;
-        break;
-      }
-    }
-
-    if (!overlaps) {
-      used.add(match);
+    const unit = match[2].toLowerCase();
+    const divisor = UNIT_DIVISORS[unit];
+    if (divisor) {
+      totalSeconds += value * divisor;
       foundAnyUnit = true;
-      const value = match.value;
-      if (value < 0) {
-        throw new Error('Negative durations not allowed');
-      }
-      totalSeconds += value * match.divisor;
     }
   }
 
