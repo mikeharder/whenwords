@@ -214,31 +214,33 @@ const UNIT_DIVISORS = {
  * @throws {Error} If input cannot be parsed
  */
 function parseDuration(input) {
-  if (typeof input !== 'string' || input.trim() === '') {
+  if (typeof input !== 'string') {
     throw new Error('Empty string');
   }
 
-  const str = input.trim().toLowerCase();
-
-  // Check for negative numbers
-  if (/-\s*\d/.test(str)) {
-    throw new Error('Negative durations not allowed');
+  const trimmed = input.trim();
+  if (trimmed === '') {
+    throw new Error('Empty string');
   }
 
-  // Check for colon notation first (h:mm:ss or h:mm)
-  const colonMatch = str.match(/^(\d+):(\d{1,2})(?::(\d{1,2}))?$/);
+  // Check for colon notation first (doesn't need lowercasing)
+  const colonMatch = trimmed.match(/^(\d+):(\d{1,2})(?::(\d{1,2}))?$/);
   if (colonMatch) {
-    const hours = parseInt(colonMatch[1]);
-    const minutes = parseInt(colonMatch[2]);
-    const seconds = colonMatch[3] ? parseInt(colonMatch[3]) : 0;
+    const hours = parseInt(colonMatch[1], 10);
+    const minutes = parseInt(colonMatch[2], 10);
+    const seconds = colonMatch[3] ? parseInt(colonMatch[3], 10) : 0;
     return hours * 3600 + minutes * 60 + seconds;
   }
 
-  // Normalize the string for parsing
-  const working = str
-    .replace(/,\s*and\s*/g, ' ')
-    .replace(/\s+and\s+/g, ' ')
-    .replace(/,/g, ' ');
+  const str = trimmed.toLowerCase();
+
+  // Check for negative numbers (minus sign followed by optional space and digit)
+  if (/^-\s*\d/.test(str)) {
+    throw new Error('Negative durations not allowed');
+  }
+
+  // Normalize the string for parsing - combine multiple replace operations
+  const working = str.replace(/,\s*and\s*|\s+and\s+|,/g, ' ');
 
   let totalSeconds = 0;
   let foundAnyUnit = false;
