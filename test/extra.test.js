@@ -97,6 +97,10 @@ describe('extra coverage tests', () => {
       expect(() => parseDuration('   ')).toThrow('Empty string');
     });
 
+    it('should throw on non-string input', () => {
+      expect(() => parseDuration(123)).toThrow('Empty string');
+    });
+
     it('should handle complex mixed units without overlap', () => {
       // Test that multiple units work without triggering overlap detection
       expect(parseDuration('2y 3mo 5d 12h 30m 45s')).toBe(63549045);
